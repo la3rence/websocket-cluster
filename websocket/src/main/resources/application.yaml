@@ -1,0 +1,25 @@
+server:
+  port: 7100
+  shutdown: immediate
+
+logging:
+  level:
+    me.lawrenceli: debug
+
+spring:
+  application:
+    name:
+      websocket-server
+  redis:
+    host: 'docker.for.mac.host.internal'
+    port: 6379
+  rabbitmq:
+    host: 'docker.for.mac.host.internal'
+    port: 5672
+    username: admin
+    password: admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: docker.for.mac.host.internal:8848
+        namespace: 6e78ac6b-71bb-4611-994a-9b48140bf1ef

@@ -1,0 +1,45 @@
+server:
+  port: 7000
+
+logging:
+  level:
+    me.lawrenceli: debug
+
+spring:
+  application:
+    name:
+      gateway-server
+  redis:
+    host: 'docker.for.mac.host.internal'
+    port: 6379
+  rabbitmq:
+    host: 'docker.for.mac.host.internal'
+    port: 5672
+    username: admin
+    password: admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: docker.for.mac.host.internal:8848
+        namespace: 6e78ac6b-71bb-4611-994a-9b48140bf1ef
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: path-route
+          uri: lb://websocket-server
+          predicates:
+            - Path=/websocket/**
+          filters:
+            - StripPrefix=1
+
+websocket:
+  service:
+    name: 'websocket-server'
+  docker:
+    network: 'compose-network'
+    host: 'tcp://docker.for.mac.host.internal:6666'
+    image:
+      name: 'websocket:1.0.0'
