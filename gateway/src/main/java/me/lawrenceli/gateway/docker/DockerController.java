@@ -2,6 +2,7 @@ package me.lawrenceli.gateway.docker;
 
 import com.github.dockerjava.api.model.Container;
 import me.lawrenceli.gateway.config.WebSocketProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +34,14 @@ public class DockerController {
 
     @GetMapping("/run")
     public ResponseEntity<String> createAndRun() {
-        String imageName = webSocketProperties.getDocker().getImage().getName();
-        String id = dockerService.createContainer(imageName).getId();
-        dockerService.runContainer(id);
-        return ResponseEntity.ok(id);
+        List<Container> containerListOfWebSocketServices = dockerService.ps(webSocketProperties.getService().getName());
+        if (containerListOfWebSocketServices.size() < 5) {
+            String imageName = webSocketProperties.getDocker().getImage().getName();
+            String id = dockerService.createContainer(imageName).getId();
+            dockerService.runContainer(id);
+            return ResponseEntity.ok(id);
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("WebSocket 实例数量达到上限");
     }
 
     @GetMapping("/rm")
