@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 /**
  * 真实节点
+ * 可以添加更多特性字段来区分不同的实例，如 DataCenter, Port 等等
  *
  * @author lawrence
  * @since 2021/3/23

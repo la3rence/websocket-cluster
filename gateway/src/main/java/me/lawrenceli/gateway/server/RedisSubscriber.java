@@ -20,10 +20,9 @@ import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 使用 redis pub/sub 订阅消息
+ * 使用 Redis pub/sub 订阅消息
  *
  * @author lawrence
- * @see RedisConfig
  * @since 2021/3/23
  */
 @Component
@@ -49,28 +48,28 @@ public class RedisSubscriber {
     }
 
     /**
-     * Redis 订阅者消费
-     * 默认方法名 handleMessage, 似乎仅限 String 参数
+     * Redis 订阅者消费, 默认方法名为 handleMessage,
+     *
+     * @param webSocketMessageJSON WebSocket 实例上下线事件的消息： WebSocketMessage 对象的序列化字符串
+     * @see <a href="https://lawrenceli.me/blog/websocket-cluster">WebSocket 集群方案</a>
+     * @see RedisConfig
      */
     @SuppressWarnings("unused")
     public void handleMessage(String webSocketMessageJSON) throws InterruptedException {
         WebSocketMessage webSocketMessage = JSON.parseJSON(webSocketMessageJSON, WebSocketMessage.class);
-        logger.info("【Redis 订阅】网关收到消息: {}", webSocketMessage);
+        logger.info("【Redis 订阅】网关收到 WebSocket 实例变化消息: {}", webSocketMessage);
         String upOrDown = webSocketMessage.getContent();
         // 实例的标识：IP
         String serverIp = webSocketMessage.getServerIp();
-        // 打印看看原先的环：
-        logger.info("该实例上线之前的 Hash 环: {}, 稍后将更新...", JSON.toJSONString(consistentHashRouter.getRing()));
-        // 网关此时通过此订阅内容，知道了某个 WebSocket 实例发生了变动
-        if (GlobalConstant.SERVER_UP_MESSAGE.equals(upOrDown)) {
+        logger.info("【哈希环】该实例上线之前为 {}, 稍后将更新...", JSON.toJSONString(consistentHashRouter.getRing()));
+        if (GlobalConstant.SERVER_UP_MESSAGE.equalsIgnoreCase(upOrDown)) {
             // 实例上线, 但 Nacos 可能尚未发现服务，此处再等 Nacos 获取到最新服务列表
-            Thread.sleep(6000);
-            // 一个服务上线了，应当告知原本hash到其他节点但现在路由到此节点的所有客户端断开连接
-            // 首先，确定是哪些客户端，筛选出一个 List<String> userIdClientsToReset
-            // 应该遍历全部 userId，计算 hash！筛选出前后匹配到不同真实节点的 userIds
-            // 因此每次 WebSocket 有新连接的时候都有必要将 userId(+hash) 保存在 redis 中，然后这里取过来。
+            Thread.sleep(5000);
+            // 一个服务上线了，应当告知原本哈希到其他节点但现在路由到此节点的所有客户端断开连接
+            // 为了确定是哪些客户端需要重连，可以遍历所有 userId 和哈希，筛选出节点添加前后匹配到不同真实节点的所有 userId
+            // 因此，每次 WebSocket 有新连接(onOpen)的时候都有必要将 userId(+hash) 保存在 redis 中，然后在节点变动时取出
             Map<Object, Object> userIdAndHashInRedis = redisTemplate.opsForHash().entries(GlobalConstant.KEY_TO_BE_HASHED);
-            logger.info("Redis 中 userId hash : {}", JSON.toJSONString(userIdAndHashInRedis));
+            logger.debug("Redis 中 userId hash : {}", JSON.toJSONString(userIdAndHashInRedis));
             Map<String, ServiceNode> oldUserAndServer = new ConcurrentHashMap<>();
             for (Object userIdObj : userIdAndHashInRedis.keySet()) {
                 String userId = (String) userIdObj;
@@ -82,33 +81,28 @@ public class RedisSubscriber {
             // 向 Hash 环添加 node
             ServiceNode serviceNode = new ServiceNode(serverIp);
             consistentHashRouter.addNode(serviceNode, GlobalConstant.VIRTUAL_COUNT);
-            // 添加了 node 之后，会发现有部分 userId - serviceNode 映射发生变动
+            // 添加了 node 之后就可能有部分 userId 路由到的真实服务节点发生变动
             List<String> userIdClientsToReset = new ArrayList<>();
             for (String userId : oldUserAndServer.keySet()) {
                 ServiceNode newServiceNode = consistentHashRouter.routeNode(userId);
                 logger.debug("【遍历】当前客户端 [{}] 的新节点 [{}]", userId, newServiceNode);
-                // 新旧可能一样，可能不一样, 把前后不一样的跳出来
+                // 同一 userId 路由到的真实服务节点前后可能会不一样, 把这些 userId 筛选出来
                 if (!newServiceNode.getKey().equals(oldUserAndServer.get(userId).getKey())) {
-                    // 找到了发生了变动的 userId
                     userIdClientsToReset.add(userId);
-                    logger.info("【哈希环更新】客户端在哈希环的映射发生了变动: [{}]: [{}] -> [{}]...", userId, oldUserAndServer.get(userId), newServiceNode);
+                    logger.info("【哈希环更新】客户端在哈希环的映射服务节点发生了变动: [{}]: [{}] -> [{}]", userId, oldUserAndServer.get(userId), newServiceNode);
                 }
             }
             // 通知部分客户端断开连接, 可以发一个全局广播让客户端断开，也可以服务端主动断开，其实就是这些客户端都要自动连接上新的实例
-            // MQ Fanout 全局通知广播, 还是得用
             fanoutSender.send(userIdClientsToReset);
         }
-        if (GlobalConstant.SERVER_DOWN_MESSAGE.equals(upOrDown)) {
+        if (GlobalConstant.SERVER_DOWN_MESSAGE.equalsIgnoreCase(upOrDown)) {
             // 实例下线, 服务端已经立刻主动断连，网关也要移除掉对应节点
             ServiceNode serviceNode = new ServiceNode(serverIp);
             consistentHashRouter.removeNode(serviceNode);
         }
+        // 将最新的哈希环放到 Redis
         SortedMap<Long, VirtualNode<ServiceNode>> ring = consistentHashRouter.getRing();
-        // 将最新的 ring 放到 redis
-        for (Long hash : ring.keySet()) {
-            redisTemplate.opsForHash().put(GlobalConstant.HASH_RING_REDIS, hash, ring.get(hash));
-        }
-        logger.info("该实例上线之后的 Hash 环: {}", JSON.toJSONString(consistentHashRouter.getRing()));
-
+        redisTemplate.opsForHash().putAll(GlobalConstant.HASH_RING_REDIS, ring);
+        logger.info("【哈希环】实例上线之后为 {}", JSON.toJSONString(ring));
     }
 }

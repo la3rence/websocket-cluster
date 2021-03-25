@@ -53,7 +53,6 @@ public class DockerService {
 
     public List<Container> ps(String containerNamePrefix) {
         logger.info("执行: docker ps|grep {}", containerNamePrefix);
-        // ListContainersCmd listContainersCmd = dockerClient.listContainersCmd().withShowAll(true);
         ListContainersCmd listContainersCmd = dockerClient.listContainersCmd().withNameFilter(Lists.newArrayList(containerNamePrefix));
         return listContainersCmd.exec();
     }
