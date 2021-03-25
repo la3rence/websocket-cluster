@@ -71,6 +71,10 @@ redis、rabbitmq、nacos 服务端访问，因为他们都被我部署在容器�
 
 代码中，所有依赖注入都尽可能地在使用构造注入，并详细地打印了日志供分析。
 
+## 前端
+
+参见[此 React 项目](https://github.com/Lonor/websocket-cluster-front).
+
 ## 贡献
 
 若有帮助，欢迎 star 收藏。有问题请提交 Issue。贡献请 fork 此项目后提交 Pull Request.
