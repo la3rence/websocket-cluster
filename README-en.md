@@ -10,11 +10,11 @@ Using a consistent hashing algorithm, we construct a hash ring where the gateway
 WebSocket service instances and dynamically updates the hash ring according to the changes of the instances. Each time a
 new service comes online, the corresponding virtual node is added, and the WebSocket clients that need to change are
 reconnected to the new instance. Clients that need to be changed are reconnected to the new instance, which is the least
-expensive; of course, it also depends on the fairness of the hashing algorithm. When the service goes offline, it is
-easier -- just disconnect all clients from the current instance, and the clients will always reconnect. At the same
-time, the core role of the hash ring is reflected in the load balancing. When the gateway does its request forwarding,
-it goes through our rewritten custom load balancing filter, which implements real node routing based on the fields that
-need to be hashed for business purposes.
+expensive; of course, it also depends on the count of the virtual nodes and the fairness of the hashing algorithm. When
+the service goes offline, it is easier -- just disconnect all clients from the current instance, and the clients will
+always reconnect. At the same time, the core role of the hash ring is reflected in the load balancing. When the gateway
+does its request forwarding, it goes through our rewritten custom load balancing filter, which implements real node
+routing based on the fields that need to be hashed for business purposes.
 
 ## Middleware / Environment Preparation
 

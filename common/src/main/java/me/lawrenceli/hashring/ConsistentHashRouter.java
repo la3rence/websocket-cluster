@@ -93,7 +93,7 @@ public class ConsistentHashRouter<T extends Node> {
      * @param physicalNode 真实节点
      */
     public void removeNode(T physicalNode) {
-        logger.info("【下线】哈希环移除一个真实节点: {}", physicalNode);
+        logger.info("【下线】移除一个真实节点: {}", physicalNode);
         // 实现注意遍历删除可能存在的并发修改异常
         Iterator<Long> iterator = ring.keySet().iterator();
         while (iterator.hasNext()) {
@@ -122,7 +122,6 @@ public class ConsistentHashRouter<T extends Node> {
         return countVirtualNode;
     }
 
-
     /**
      * 默认 hash 实现
      */
@@ -142,7 +141,6 @@ public class ConsistentHashRouter<T extends Node> {
             instance.reset();
             instance.update(key.getBytes());
             byte[] digest = instance.digest();
-
             long h = 0;
             for (int i = 0; i < 4; i++) {
                 h <<= 8;

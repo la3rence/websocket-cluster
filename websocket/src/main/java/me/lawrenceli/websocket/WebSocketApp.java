@@ -16,5 +16,4 @@ public class WebSocketApp {
         SpringApplication.run(WebSocketApp.class);
     }
 
-
 }

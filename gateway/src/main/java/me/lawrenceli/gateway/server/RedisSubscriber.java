@@ -63,17 +63,14 @@ public class RedisSubscriber {
         logger.info("该实例上线之前的 Hash 环: {}, 稍后将更新...", JSON.toJSONString(consistentHashRouter.getRing()));
         // 网关此时通过此订阅内容，知道了某个 WebSocket 实例发生了变动
         if (GlobalConstant.SERVER_UP_MESSAGE.equals(upOrDown)) {
-            // 实例上线, 但Nacos 可能尚未发现服务，此处再等 Nacos 获取到最新服务列表
-            Thread.sleep(8000);
+            // 实例上线, 但 Nacos 可能尚未发现服务，此处再等 Nacos 获取到最新服务列表
+            Thread.sleep(6000);
             // 一个服务上线了，应当告知原本hash到其他节点但现在路由到此节点的所有客户端断开连接
             // 首先，确定是哪些客户端，筛选出一个 List<String> userIdClientsToReset
-            // 应该遍历全部 userId，计算 hash！筛选出前后匹配到不同 真实节点的 userIds
-            // 因此每次 有连接的时候 都需要将 userId(+hash) 保存在 redis 中，然后这里取过来。
-
-            // 空！！！？？？
+            // 应该遍历全部 userId，计算 hash！筛选出前后匹配到不同真实节点的 userIds
+            // 因此每次 WebSocket 有新连接的时候都有必要将 userId(+hash) 保存在 redis 中，然后这里取过来。
             Map<Object, Object> userIdAndHashInRedis = redisTemplate.opsForHash().entries(GlobalConstant.KEY_TO_BE_HASHED);
-            logger.warn("Redis 中 userId hash : {}", JSON.toJSONString(userIdAndHashInRedis));
-
+            logger.info("Redis 中 userId hash : {}", JSON.toJSONString(userIdAndHashInRedis));
             Map<String, ServiceNode> oldUserAndServer = new ConcurrentHashMap<>();
             for (Object userIdObj : userIdAndHashInRedis.keySet()) {
                 String userId = (String) userIdObj;
@@ -85,7 +82,6 @@ public class RedisSubscriber {
             // 向 Hash 环添加 node
             ServiceNode serviceNode = new ServiceNode(serverIp);
             consistentHashRouter.addNode(serviceNode, GlobalConstant.VIRTUAL_COUNT);
-
             // 添加了 node 之后，会发现有部分 userId - serviceNode 映射发生变动
             List<String> userIdClientsToReset = new ArrayList<>();
             for (String userId : oldUserAndServer.keySet()) {
@@ -99,10 +95,8 @@ public class RedisSubscriber {
                 }
             }
             // 通知部分客户端断开连接, 可以发一个全局广播让客户端断开，也可以服务端主动断开，其实就是这些客户端都要自动连接上新的实例
-            // MQ Fanout 全局通知广播, 还是得用到。。。。。。艹。
-            //
+            // MQ Fanout 全局通知广播, 还是得用
             fanoutSender.send(userIdClientsToReset);
-
         }
         if (GlobalConstant.SERVER_DOWN_MESSAGE.equals(upOrDown)) {
             // 实例下线, 服务端已经立刻主动断连，网关也要移除掉对应节点

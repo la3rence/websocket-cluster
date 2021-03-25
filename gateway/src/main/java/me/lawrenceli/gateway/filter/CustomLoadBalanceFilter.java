@@ -82,7 +82,7 @@ public class CustomLoadBalanceFilter extends LoadBalancerClientFilter implements
                 for (ServiceInstance instance : instances) {
                     // 如果 userId 映射后的真实节点的 IP 与某个实例 IP 一致，就转发
                     if (instance.getHost().equals(serviceNode.getKey())) {
-                        logger.info("当前客户端[{}]匹配到真实节点{}", userId, serviceNode.getKey());
+                        logger.debug("当前客户端[{}]匹配到真实节点 {}", userId, serviceNode.getKey());
                         return instance;
                     }
                 }

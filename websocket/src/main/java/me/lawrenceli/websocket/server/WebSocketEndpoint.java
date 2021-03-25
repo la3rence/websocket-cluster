@@ -114,11 +114,8 @@ public class WebSocketEndpoint {
         for (String userId : sessionMap.keySet()) {
             Session session = sessionMap.get(userId);
             try {
-                session.close(); // todo: 会触发 this.onClose() 方法
+                session.close();
                 logger.info("当前服务端已主动断开 {} 的连接", userId);
-                // 但是由于服务关闭时间不是立刻关闭，导致重连时(如果重连间隙比较短，几秒内)仍然可能有客户端可以连接！
-                // 正确的做法应该拒绝新的请求
-                // 完全「卸载」这个 endpoint？
             } catch (IOException e) {
                 logger.error("服务端主动断开 {} 连接发生异常: {}", userId, e.getMessage());
                 e.printStackTrace();

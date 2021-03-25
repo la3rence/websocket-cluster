@@ -14,7 +14,7 @@ public class GlobalConstant {
 
     public static final String SERVER_DOWN_MESSAGE = "DOWN";
 
-    public static final Integer VIRTUAL_COUNT = 5;
+    public static final Integer VIRTUAL_COUNT = 10;
 
     public static final String KEY_TO_BE_HASHED = "userId";
 
