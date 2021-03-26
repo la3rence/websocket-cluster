@@ -24,4 +24,7 @@ public class GlobalConstant {
 
     public static final String WEBSOCKET_ENDPOINT_PATH = "/connect";
 
+    private GlobalConstant() {
+    }
+
 }

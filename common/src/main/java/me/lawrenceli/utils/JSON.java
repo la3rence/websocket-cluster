@@ -36,4 +36,10 @@ public class JSON {
         }
         return t;
     }
+
+    /**
+     * 工具类私有构造
+     */
+    private JSON() {
+    }
 }

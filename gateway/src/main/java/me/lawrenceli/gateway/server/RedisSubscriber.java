@@ -76,7 +76,11 @@ public class RedisSubscriber {
                 Long oldHashObj = Long.valueOf(userIdAndHashInRedis.get(userId).toString());
                 ServiceNode oldServiceNode = consistentHashRouter.routeNode(userId);
                 logger.debug("【遍历】当前客户端 [{}] 的旧节点 [{}]", userId, oldServiceNode);
-                oldUserAndServer.put(userId, oldServiceNode);
+                // 如果 WebSocket 实例上线之前就有了客户端的连接，重连间隙可能只有几秒，极有可能此时哈希环是空的
+                // https://github.com/Lonor/websocket-cluster/issues/2
+                if (null != oldServiceNode) {
+                    oldUserAndServer.put(userId, oldServiceNode);
+                }
             }
             // 向 Hash 环添加 node
             ServiceNode serviceNode = new ServiceNode(serverIp);
