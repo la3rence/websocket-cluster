@@ -53,6 +53,7 @@ public class ConsistentHashRouter<T extends Node> {
      */
     public T routeNode(String businessKey) {
         if (ring.isEmpty()) {
+            logger.warn("哈希环为空");
             return null;
         }
         Long hashOfBusinessKey = this.hashAlgorithm.hash(businessKey);
