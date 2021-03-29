@@ -1,7 +1,7 @@
 package me.lawrenceli.gateway.config;
 
 import me.lawrenceli.contant.GlobalConstant;
-import me.lawrenceli.gateway.filter.CustomLoadBalanceFilter;
+import me.lawrenceli.gateway.filter.CustomReactiveLoadBalanceFilter;
 import me.lawrenceli.gateway.server.ServiceNode;
 import me.lawrenceli.hashring.ConsistentHashRouter;
 import me.lawrenceli.hashring.VirtualNode;
@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.gateway.config.LoadBalancerProperties;
+import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,28 +32,31 @@ public class GatewayHashRingConfig {
 
     final RedisTemplate<Object, Object> redisTemplate;
     final WebSocketProperties webSocketProperties;
+    private final LoadBalancerClientFactory clientFactory;
 
-    public GatewayHashRingConfig(RedisTemplate<Object, Object> redisTemplate, WebSocketProperties webSocketProperties) {
+    public GatewayHashRingConfig(RedisTemplate<Object, Object> redisTemplate,
+                                 WebSocketProperties webSocketProperties,
+                                 LoadBalancerClientFactory clientFactory) {
         this.redisTemplate = redisTemplate;
         this.webSocketProperties = webSocketProperties;
+        this.clientFactory = clientFactory;
     }
 
     /**
-     * 初始化自定义负载均衡过滤器
-     *
-     * @param client               bean
-     * @param properties           bean
-     * @param consistentHashRouter {@link #init() init方法}注入，此处未使用构造注入（会产生循环依赖）
-     * @return CustomLoadBalanceFilter bean
-     * @see CustomLoadBalanceFilter
+     * @param client                 负载均衡客户端
+     * @param loadBalancerProperties 负载均衡配置
+     * @param consistentHashRouter   {@link #init() init方法}注入，此处未使用构造注入（会产生循环依赖）
+     * @param discoveryClient        服务发现客户端
+     * @return 注入自定义的 Reactive 过滤器 Bean 对象
      */
     @Bean
-    public CustomLoadBalanceFilter customLoadBalanceFilter(LoadBalancerClient client,
-                                                           LoadBalancerProperties properties,
-                                                           ConsistentHashRouter<ServiceNode> consistentHashRouter,
-                                                           DiscoveryClient discoveryClient) {
-        logger.debug("初始化 CustomLoadBalanceFilter: {}, {}", client, properties);
-        return new CustomLoadBalanceFilter(client, properties, consistentHashRouter, webSocketProperties, discoveryClient);
+    public CustomReactiveLoadBalanceFilter customReactiveLoadBalanceFilter(LoadBalancerClient client,
+                                                                           LoadBalancerProperties loadBalancerProperties,
+                                                                           ConsistentHashRouter<ServiceNode> consistentHashRouter,
+                                                                           DiscoveryClient discoveryClient) {
+        logger.debug("初始化 自定义响应式负载均衡器: {}, {}", client, loadBalancerProperties);
+        return new CustomReactiveLoadBalanceFilter(clientFactory, loadBalancerProperties,
+                consistentHashRouter, discoveryClient, webSocketProperties);
     }
 
     @Bean
