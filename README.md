@@ -73,7 +73,8 @@ redis、rabbitmq、nacos 服务端访问，因为他们都被我部署在容器�
 
 ## 前端
 
-参见[此 React 项目](https://github.com/Lonor/websocket-cluster-front).
+参见[此 React 项目](https://github.com/Lonor/websocket-cluster-front). 效果如图：
+![Demo](./demo.gif)
 
 ## 贡献
 

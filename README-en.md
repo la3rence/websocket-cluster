@@ -83,7 +83,8 @@ phase because I didn't prepare a CI/CD pipeline for this project.
 
 ## Front-end
 
-Check out [this react app](https://github.com/Lonor/websocket-cluster-front).
+Check out [this react app](https://github.com/Lonor/websocket-cluster-front). It looks like:
+![Demo](./demo.gif)
 
 ## Contribution
 
