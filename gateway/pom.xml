@@ -32,6 +32,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-loadbalancer</artifactId>
+        </dependency>
         <!-- https://github.com/docker-java/docker-java/blob/master/docs/getting_started.md-->
         <dependency>
             <groupId>com.github.docker-java</groupId>
