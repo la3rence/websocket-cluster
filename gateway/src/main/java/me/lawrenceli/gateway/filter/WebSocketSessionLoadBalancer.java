@@ -16,6 +16,7 @@ import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.cloud.loadbalancer.core.NoopServiceInstanceListSupplier;
 import org.springframework.cloud.loadbalancer.core.RandomLoadBalancer;
 import org.springframework.cloud.loadbalancer.core.ReactorServiceInstanceLoadBalancer;
+import org.springframework.cloud.loadbalancer.core.RoundRobinLoadBalancer;
 import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
 import org.springframework.http.server.PathContainer;
 import org.springframework.util.MultiValueMap;
@@ -73,9 +74,12 @@ public class WebSocketSessionLoadBalancer implements ReactorServiceInstanceLoadB
     @Override
     @SuppressWarnings("deprecation")
     public Mono<Response<ServiceInstance>> choose() {
-        logger.debug("无 userId 的请求，对于 WebSocket 服务也没有意义，随机转发...");
-        RandomLoadBalancer randomLoadBalancer = new RandomLoadBalancer(serviceInstanceListSupplierProvider, webSocketProperties.getService().getName());
-        return randomLoadBalancer.choose();
+        logger.debug("【RoundRobin】无 userId 的请求，对于 WebSocket 服务也没有意义，轮询转发...");
+        // Round-Robin: 该术语来源于含义为「带子」的法语词 ruban，久而被讹用并成为惯用语。在 17、18 世纪时法国农民希望以请愿的方式抗议国王时，
+        // 通常君主的反应是将请愿书中最前面的两至三人逮捕并处决，所以很自然地没有人希望自己的名字被列在前面。为了对付这种专制的报复，
+        // 人们在请愿书底部把名字签成一个圈（如同一条环状的带子），这样就找不出打头的人，于是只能对所有参与者进行同样的惩罚。
+        RoundRobinLoadBalancer roundRobinLoadBalancer = new RoundRobinLoadBalancer(serviceInstanceListSupplierProvider, webSocketProperties.getService().getName());
+        return roundRobinLoadBalancer.choose();
     }
 
     /**
