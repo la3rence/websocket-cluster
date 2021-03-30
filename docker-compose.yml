@@ -2,13 +2,11 @@ version: "3"
 services:
   gateway-server:
     image: gateway:1.0.0
-    # set the name if only one container
-    container_name: gw
     hostname: gateway-server
     networks:
       - network
     ports:
-      - "7000:7000"
+      - "7000-7001:7000"
   websocket-server:
     image: websocket:1.0.0
     hostname: websocket-serverr

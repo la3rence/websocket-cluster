@@ -55,7 +55,7 @@ systemctl restart docker
 
 ### macOS 上访问 Docker API
 
-社区最佳实践是用 `alpine/socat` 来暴露 API。参考 [socat 的用法](https://github.com/alpine-docker/socat#example).
+最佳实践是用 `alpine/socat` 来暴露 TCP 套接字。参考 [socat 的用法](https://github.com/alpine-docker/socat#example).
 
 ```shell
 docker run -itd --name socat \
@@ -65,15 +65,16 @@ docker run -itd --name socat \
     tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
 ```
 
-注意，Docker 的 macOS 客户端提供了一个  `docker.for.mac.host.internal` 的主机名，可以在容器内访问宿主网络。 我将这个地址用在了 `application.yml` 配置文件中，用来作为
+注意，Docker 的 macOS 客户端提供了一个 `docker.for.mac.host.internal` 的主机名，可以在容器内访问宿主网络。 我将这个地址用在了 `application.yml` 配置文件中，用来作为
 redis、rabbitmq、nacos 服务端访问，因为他们都被我部署在容器里。如果要部署到服务器或自己本地开发，你可以把地址改掉。还有，我写了个 `Makefile`
-用来帮我在开发阶段更快地编译并重启服务，因为我并没有给这个项目配置一个持续集成流水线。
+用来帮自己在开发阶段更快地编译并重启服务，因为我并没有给这个项目配置一个持续集成流水线，请按需使用。
 
 代码中，所有依赖注入都尽可能地在使用构造注入，并详细地打印了日志供分析。
 
 ## 前端
 
 参见[此 React 项目](https://github.com/Lonor/websocket-cluster-front). 效果如图：
+
 ![Demo](./demo.gif)
 
 ## 贡献

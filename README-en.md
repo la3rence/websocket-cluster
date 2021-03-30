@@ -63,7 +63,7 @@ systemctl restart docker
 
 ### Access docker API on macOS
 
-The best practice is using the image `alpine/socat` to expose. (
+The best practice is using the image `alpine/socat` to expose a tcp socket. (
 see: [usage of socat](https://github.com/alpine-docker/socat#example)).
 
 ```shell
@@ -75,15 +75,16 @@ docker run -itd --name socat \
 ```
 
 For the record, the Docker-desktop client for macOS provides the `docker.for.mac.host.internal` hostname for accessing
-the host in the container of docker. I also and this domain to my `/etc/hosts` and point it to the localhost address. So
+the host in the container of docker. I also add this domain to my `/etc/hosts` and point it to the localhost address. So
 I use this address in `application.yml` to set up configuration for the redis, the rabbitmq and the nacos servers(they
 are all deployed in the container). You can change this address if you deploy on your machine or other linux servers.
 BTW, the Makefile is only for self usage, which makes me build and restart the service faster during the development
-phase because I didn't prepare a CI/CD pipeline for this project.
+phase because I didn't prepare a CI/CD pipeline for this project. Please use it as needed.
 
 ## Front-end
 
 Check out [this react app](https://github.com/Lonor/websocket-cluster-front). It looks like:
+
 ![Demo](./demo.gif)
 
 ## Contribution

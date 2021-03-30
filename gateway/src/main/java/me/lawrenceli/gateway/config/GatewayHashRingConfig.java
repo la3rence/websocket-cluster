@@ -61,7 +61,7 @@ public class GatewayHashRingConfig {
 
     @Bean
     public ConsistentHashRouter<ServiceNode> init() {
-        // 先从 Redis 中获取哈希环
+        // 先从 Redis 中获取哈希环(网关集群)
         final Map<Object, Object> ring = redisTemplate.opsForHash().entries(GlobalConstant.HASH_RING_REDIS);
         // 获取环中的所有真实节点
         List<ServiceNode> serviceNodes = new ArrayList<>();
