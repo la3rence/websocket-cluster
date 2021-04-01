@@ -11,7 +11,6 @@ import java.util.Properties;
 
 /**
  * 该 Bean 并没有使用，而是用的 Docker API 来获取实例信息。
- * todo: 使用 NamingService 来获取服务列表
  *
  * @author lawrence
  * @since 2021/3/21
