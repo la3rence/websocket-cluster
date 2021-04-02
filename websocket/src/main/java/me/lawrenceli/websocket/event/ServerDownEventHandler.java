@@ -1,6 +1,6 @@
 package me.lawrenceli.websocket.event;
 
-import me.lawrenceli.contant.GlobalConstant;
+import me.lawrenceli.constant.GlobalConstant;
 import me.lawrenceli.model.MessageType;
 import me.lawrenceli.model.WebSocketMessage;
 import me.lawrenceli.utils.JSON;

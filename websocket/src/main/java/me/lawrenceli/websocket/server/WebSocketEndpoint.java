@@ -1,6 +1,6 @@
 package me.lawrenceli.websocket.server;
 
-import me.lawrenceli.contant.GlobalConstant;
+import me.lawrenceli.constant.GlobalConstant;
 import me.lawrenceli.hashring.ConsistentHashRouter;
 import me.lawrenceli.model.MessageType;
 import me.lawrenceli.model.WebSocketMessage;

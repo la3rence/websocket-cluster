@@ -1,6 +1,6 @@
 package me.lawrenceli.gateway.server;
 
-import me.lawrenceli.contant.GlobalConstant;
+import me.lawrenceli.constant.GlobalConstant;
 import me.lawrenceli.gateway.config.RedisConfig;
 import me.lawrenceli.gateway.config.WebSocketProperties;
 import me.lawrenceli.hashring.ConsistentHashRouter;

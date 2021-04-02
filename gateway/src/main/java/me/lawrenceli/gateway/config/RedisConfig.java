@@ -1,6 +1,6 @@
 package me.lawrenceli.gateway.config;
 
-import me.lawrenceli.contant.GlobalConstant;
+import me.lawrenceli.constant.GlobalConstant;
 import me.lawrenceli.gateway.server.RedisSubscriber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
