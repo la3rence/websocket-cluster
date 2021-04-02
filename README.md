@@ -77,6 +77,24 @@ redis、rabbitmq、nacos 服务端访问，因为他们都被我部署在容器�
 
 ![Demo](./demo.gif)
 
+## 部署
+
+修改 `docker-compose.yml`, 添加如下 host 解析，可以方便地替换掉服务调用地址而不用更改任何代码或 `application.yaml`，注意后面的 IP 建议使用服务器内网 IP 地址。唯一必要的修改是
+Nacos 的 namespace.
+
+```yml
+ extra_hosts:
+   - "docker.for.mac.host.internal:192.168.0.1"
+```
+
+所有必要环境就绪后，直接开启服务。请仔细参考 Makefile 中的内容使用，如：
+
+```shell
+make up
+```
+
+注意 `make down` 操作会删除所有 none 容器镜像以及 redis 中的内容。
+
 ## 贡献
 
 若有帮助，欢迎 star 收藏。有问题请提交 Issue。贡献请 fork 此项目后提交 Pull Request.
