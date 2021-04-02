@@ -1,6 +1,6 @@
 package me.lawrenceli.gateway.server;
 
-import me.lawrenceli.contant.GlobalConstant;
+import me.lawrenceli.constant.GlobalConstant;
 import me.lawrenceli.utils.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

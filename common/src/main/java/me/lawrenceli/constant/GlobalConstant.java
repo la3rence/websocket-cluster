@@ -1,4 +1,4 @@
-package me.lawrenceli.contant;
+package me.lawrenceli.constant;
 
 /**
  * @author lawrence
@@ -19,8 +19,6 @@ public class GlobalConstant {
     public static final String KEY_TO_BE_HASHED = "userId";
 
     public static final String FANOUT_EXCHANGE_NAME = "websocket-cluster-exchange";
-
-    public static final String QUEUE_NAME_FOR_RECONNECT = "reconnect-message";
 
     public static final String WEBSOCKET_ENDPOINT_PATH = "/connect";
 

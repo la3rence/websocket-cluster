@@ -1,12 +1,12 @@
 package me.lawrenceli.websocket.config;
 
-import me.lawrenceli.contant.GlobalConstant;
+import me.lawrenceli.constant.GlobalConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AnonymousQueue;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,9 +26,9 @@ public class MQConfig {
     }
 
     @Bean
-    public Queue queueForWebSocket() {
-        log.info("创建用于 WebSocket 的队列");
-        return new Queue(GlobalConstant.QUEUE_NAME_FOR_RECONNECT);
+    public AnonymousQueue queueForWebSocket() {
+        log.info("创建用于 WebSocket 的匿名队列");
+        return new AnonymousQueue();
     }
 
     /**
@@ -37,7 +37,7 @@ public class MQConfig {
      * @return Binding
      */
     @Bean
-    public Binding bindingSingle(FanoutExchange fanoutExchange, Queue queueForWebSocket) {
+    public Binding bindingSingle(FanoutExchange fanoutExchange, AnonymousQueue queueForWebSocket) {
         log.info("把队列 [{}] 绑定到广播交换器 [{}]", queueForWebSocket.getName(), fanoutExchange.getName());
         return BindingBuilder.bind(queueForWebSocket).to(fanoutExchange);
     }

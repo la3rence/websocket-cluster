@@ -1,6 +1,6 @@
 package me.lawrenceli.gateway.config;
 
-import me.lawrenceli.contant.GlobalConstant;
+import me.lawrenceli.constant.GlobalConstant;
 import me.lawrenceli.gateway.filter.CustomReactiveLoadBalanceFilter;
 import me.lawrenceli.gateway.server.ServiceNode;
 import me.lawrenceli.hashring.ConsistentHashRouter;
