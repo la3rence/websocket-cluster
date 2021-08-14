@@ -9,6 +9,7 @@ import java.util.SortedMap;
 
 import static me.lawrenceli.constant.GlobalConstant.VIRTUAL_COUNT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
@@ -30,6 +31,7 @@ class ConsistentHashRouterTest {
     void addNode() {
         consistentHashRouter.addNode(() -> "2", VIRTUAL_COUNT);
         assertSame(VIRTUAL_COUNT, consistentHashRouter.getVirtualNodeCountOf(() -> "2"));
+        assertEquals(2 * VIRTUAL_COUNT, consistentHashRouter.getRing().size());
     }
 
     @Test
@@ -47,7 +49,8 @@ class ConsistentHashRouterTest {
     @Test
     void removeNode() {
         consistentHashRouter.removeNode(() -> "1");
-        assertEquals(0, consistentHashRouter.getRing().size());
+        Node node = consistentHashRouter.routeNode("1");
+        assertNull(node);
     }
 
     @Test
