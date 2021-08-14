@@ -18,7 +18,7 @@ public class BeanUtils implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
-        BeanUtils.applicationContext = applicationContext;
+        BeanUtils.applicationContext = applicationContext; // NOSONAR
     }
 
     public static Object getBean(String beanName) {

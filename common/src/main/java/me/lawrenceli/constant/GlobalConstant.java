@@ -20,7 +20,7 @@ public class GlobalConstant {
 
     public static final String FANOUT_EXCHANGE_NAME = "websocket-cluster-exchange";
 
-    public static final String WEBSOCKET_ENDPOINT_PATH = "/connect";
+    public static final String WEBSOCKET_ENDPOINT_PATH = "/connect"; // NOSONAR
 
     private GlobalConstant() {
     }

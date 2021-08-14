@@ -69,11 +69,10 @@ public class CustomReactiveLoadBalanceFilter extends ReactiveLoadBalancerClientF
         addOriginalRequestUrl(exchange, url);
 
         if (logger.isTraceEnabled()) {
-            logger.trace(ReactiveLoadBalancerClientFilter.class.getSimpleName()
-                    + " url before: " + url);
+            logger.trace("{} url before: {}", ReactiveLoadBalancerClientFilter.class.getSimpleName(), url);
         }
 
-        return choose(exchange).doOnNext(response -> {
+        return chooseInstance(exchange).doOnNext(response -> {
             if (!response.hasServer()) {
                 throw NotFoundException.create(properties.isUse404(),
                         "Unable to find instance for " + url.getHost());
@@ -96,14 +95,14 @@ public class CustomReactiveLoadBalanceFilter extends ReactiveLoadBalancerClientF
             URI requestUrl = reconstructURI(serviceInstance, uri);
 
             if (logger.isTraceEnabled()) {
-                logger.trace("LoadBalancerClientFilter url chosen: " + requestUrl);
+                logger.trace("LoadBalancerClientFilter url chosen: {}", requestUrl);
             }
             exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, requestUrl);
         }).then(chain.filter(exchange));
     }
 
     @SuppressWarnings("deprecation")
-    private Mono<Response<ServiceInstance>> choose(ServerWebExchange exchange) {
+    private Mono<Response<ServiceInstance>> chooseInstance(ServerWebExchange exchange) {
         URI uri = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR);
         assert uri != null;
         WebSocketSessionLoadBalancer loadBalancer = new WebSocketSessionLoadBalancer(

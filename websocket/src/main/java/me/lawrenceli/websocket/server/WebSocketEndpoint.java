@@ -19,7 +19,9 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author lawrence
@@ -35,7 +37,7 @@ public class WebSocketEndpoint {
      * key: userId
      * value: websocket session
      */
-    public static ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
+    public static final ConcurrentMap<String, Session> sessionMap = new ConcurrentHashMap<>(); // NOSONAR
 
     // Do not make DI with `@autowired` or constructor in this class with `@ServerEndpoint` annotated.
 
@@ -86,7 +88,7 @@ public class WebSocketEndpoint {
 
     @OnError
     public void onError(Throwable throwable) {
-        logger.error("WebSocket 出现错误: " + throwable.getMessage());
+        logger.error("WebSocket 出现错误: {} ", throwable.getMessage());
     }
 
     @OnClose
@@ -111,13 +113,13 @@ public class WebSocketEndpoint {
     }
 
     public static void disconnectAllByServer() {
-        for (String userId : sessionMap.keySet()) {
-            Session session = sessionMap.get(userId);
+        for (Map.Entry<String, Session> sessionEntry : sessionMap.entrySet()) {
+            Session session = sessionEntry.getValue();
             try {
                 session.close();
-                logger.info("当前服务端已主动断开 {} 的连接", userId);
+                logger.info("当前服务端已主动断开 {} 的连接", sessionEntry.getKey());
             } catch (IOException e) {
-                logger.error("服务端主动断开 {} 连接发生异常: {}", userId, e.getMessage());
+                logger.error("服务端主动断开 {} 连接发生异常: {}", sessionEntry.getKey(), e.getMessage());
                 e.printStackTrace();
             }
         }

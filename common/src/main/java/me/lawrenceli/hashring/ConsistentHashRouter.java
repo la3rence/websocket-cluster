@@ -18,7 +18,7 @@ import java.util.TreeMap;
  */
 public class ConsistentHashRouter<T extends Node> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ConsistentHashRouter.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConsistentHashRouter.class);
 
     private final HashAlgorithm hashAlgorithm;
 
@@ -145,7 +145,7 @@ public class ConsistentHashRouter<T extends Node> {
             long h = 0;
             for (int i = 0; i < 4; i++) {
                 h <<= 8;
-                h |= ((int) digest[i]) & 0xFF;
+                h |= (digest[i]) & 0xFF;
             }
             return h;
         }

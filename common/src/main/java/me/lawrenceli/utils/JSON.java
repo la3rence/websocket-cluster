@@ -19,7 +19,6 @@ public class JSON {
         try {
             json = mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            // e.printStackTrace();
             logger.error("将对象 {} 序列化为 JSON 失败", object);
         }
         return json;
@@ -31,7 +30,6 @@ public class JSON {
         try {
             t = mapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
-            // e.printStackTrace();
             logger.error("将字符 {} 反序列化为对象失败", json);
         }
         return t;
