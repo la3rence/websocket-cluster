@@ -59,12 +59,10 @@ public class WebSocketSessionLoadBalancer implements ReactorServiceInstanceLoadB
         if (webSocketProperties.getService().getName().equals(instancesId)) {
             // 获取需要参与哈希的字段，此项目为 userId
             final String userIdFromRequest = getUserIdFromRequest(exchange);
-            if (null != userIdFromRequest) {
+            if (null != userIdFromRequest && null != this.serviceInstanceListSupplierProvider) {
                 // 请求参数中有 userId，需要经过哈希环的路由
-                if (this.serviceInstanceListSupplierProvider != null) {
-                    ServiceInstanceListSupplier supplier = serviceInstanceListSupplierProvider.getIfAvailable(NoopServiceInstanceListSupplier::new);
-                    return (supplier.get()).next().map(list -> getServiceInstanceByUserId(userIdFromRequest, instancesId));
-                }
+                ServiceInstanceListSupplier supplier = serviceInstanceListSupplierProvider.getIfAvailable(NoopServiceInstanceListSupplier::new);
+                return (supplier.get()).next().map(list -> getServiceInstanceByUserId(userIdFromRequest, instancesId));
             }
         }
         return choose();

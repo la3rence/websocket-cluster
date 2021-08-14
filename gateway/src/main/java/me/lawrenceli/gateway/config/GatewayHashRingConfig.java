@@ -60,6 +60,7 @@ public class GatewayHashRingConfig {
     }
 
     @Bean
+    @SuppressWarnings("unchecked")
     public ConsistentHashRouter<ServiceNode> init() {
         // 先从 Redis 中获取哈希环(网关集群)
         final Map<Object, Object> ring = redisTemplate.opsForHash().entries(GlobalConstant.HASH_RING_REDIS);
@@ -72,7 +73,7 @@ public class GatewayHashRingConfig {
             serviceNodes.add(physicalNode);
         }
         ConsistentHashRouter<ServiceNode> consistentHashRouter = new ConsistentHashRouter<>(serviceNodes, GlobalConstant.VIRTUAL_COUNT);
-        logger.debug("初始化 ConsistentHashRouter: {}", consistentHashRouter.toString());
+        logger.debug("初始化 ConsistentHashRouter: {}", consistentHashRouter);
         return consistentHashRouter;
     }
 

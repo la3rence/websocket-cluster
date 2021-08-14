@@ -23,7 +23,8 @@ import java.util.List;
  * @since 2021/3/24
  * @deprecated 推荐使用响应式网关的新过滤器 {@link CustomReactiveLoadBalanceFilter}
  */
-public class CustomLoadBalanceFilter extends LoadBalancerClientFilter implements BeanPostProcessor {
+@Deprecated
+public class CustomLoadBalanceFilter extends LoadBalancerClientFilter implements BeanPostProcessor { // NOSONAR
 
     final ConsistentHashRouter<ServiceNode> consistentHashRouter;
     final WebSocketProperties webSocketProperties;

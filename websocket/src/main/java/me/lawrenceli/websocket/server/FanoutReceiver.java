@@ -18,7 +18,7 @@ public class FanoutReceiver {
 
     @RabbitListener(queues = "#{queueForWebSocket.name}")
     public void receiver(List<String> clientsToReset) {
-        log.info("队列接收到了主动断掉服务端 WebSocket 连接的消息: [{}]", clientsToReset.toString());
+        log.info("队列接收到了主动断掉服务端 WebSocket 连接的消息: [{}]", clientsToReset);
         WebSocketEndpoint.disconnectSomeByServer(clientsToReset);
     }
 
