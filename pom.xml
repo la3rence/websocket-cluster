@@ -19,6 +19,8 @@
         <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <sonar.organization>lonor</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencyManagement>
