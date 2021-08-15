@@ -1,6 +1,7 @@
 package me.lawrenceli.gateway.docker;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.ListContainersCmd;
 import com.github.dockerjava.api.model.Container;
@@ -29,7 +30,7 @@ public class DockerService {
     private static final Logger logger = LoggerFactory.getLogger(DockerService.class);
 
     final WebSocketProperties webSocketProperties;
-    final DockerClient dockerClient;
+    DockerClient dockerClient;
 
     public DockerService(WebSocketProperties webSocketProperties) {
         this.webSocketProperties = webSocketProperties;
@@ -59,10 +60,11 @@ public class DockerService {
 
     public CreateContainerResponse createContainer(String imageName) {
         logger.info("执行: 创建 {} 的容器", imageName);
-        return dockerClient.createContainerCmd(imageName)
-                .withHostConfig(HostConfig.newHostConfig().withNetworkMode(webSocketProperties.getDocker().getNetwork()))
-                .withName(webSocketProperties.getService().getName() + '-' + System.currentTimeMillis())
-                .exec();
+        try (CreateContainerCmd containerCmd = dockerClient.createContainerCmd(imageName)) {
+            return containerCmd.withHostConfig(HostConfig.newHostConfig().withNetworkMode(webSocketProperties.getDocker().getNetwork()))
+                    .withName(webSocketProperties.getService().getName() + '-' + System.currentTimeMillis())
+                    .exec();
+        }
     }
 
     public void runContainer(String containerId) {
