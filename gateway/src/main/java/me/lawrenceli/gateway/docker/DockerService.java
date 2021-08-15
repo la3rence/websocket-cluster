@@ -46,13 +46,13 @@ public class DockerService {
                             .build());
         } catch (URISyntaxException e) {
             logger.error("Docker Host 不是合法的 URI");
-            e.printStackTrace();
         }
         return dockerClientBuilder.build();
     }
 
     public List<Container> ps(String containerNamePrefix) {
-        logger.info("执行: docker ps|grep {}", containerNamePrefix);
+        String containerName = containerNamePrefix.replaceAll("[\n\r\t]", "_");
+        logger.info("执行: docker ps|grep {}", containerName);
         ListContainersCmd listContainersCmd = dockerClient.listContainersCmd().withNameFilter(Lists.newArrayList(containerNamePrefix));
         return listContainersCmd.exec();
     }
