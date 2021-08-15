@@ -36,8 +36,7 @@ public class NamingServiceConfig {
         try {
             namingService = new NacosNamingService(properties);
         } catch (NacosException e) {
-            logger.error("NacosNamingService 创建异常");
-            e.printStackTrace();
+            logger.error("NacosNamingService 创建异常: {}", e.toString());
         }
         return namingService;
     }
