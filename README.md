@@ -1,3 +1,8 @@
+[![CI](https://github.com/Lonor/websocket-cluster/actions/workflows/sonar.yml/badge.svg)](https://github.com/Lonor/websocket-cluster/actions/workflows/sonar.yml)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Lonor_websocket-cluster&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Lonor_websocket-cluster)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Lonor_websocket-cluster&metric=alert_status)](https://sonarcloud.io/dashboard?id=Lonor_websocket-cluster)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Lonor_websocket-cluster&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=Lonor_websocket-cluster)
+
 # 实战 Spring Cloud 的 WebSocket 集群
 
 此项目是一个 WebSocket 集群的实践，基于 Spring Cloud。
