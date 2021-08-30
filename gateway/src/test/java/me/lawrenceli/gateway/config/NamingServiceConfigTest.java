@@ -12,18 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 class NamingServiceConfigTest {
 
-    static WebSocketProperties webSocketProperties;
-
-    static {
-        webSocketProperties = new WebSocketProperties();
-        webSocketProperties.setNacosServerAddress("127.0.0.1");
-        webSocketProperties.setNacosNamespace("test");
-    }
-
     private NamingServiceConfig namingServiceConfig;
 
     @BeforeEach
     void setUp() {
+        WebSocketProperties webSocketProperties = new WebSocketProperties();
+        webSocketProperties.setNacosServerAddress("127.0.0.1");
+        webSocketProperties.setNacosNamespace("test");
         namingServiceConfig = new NamingServiceConfig(webSocketProperties);
     }
 
