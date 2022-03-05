@@ -66,7 +66,7 @@ public class WebSocketEndpoint {
     public Boolean sendMessageToUser(String userId, WebSocketMessage webSocketMessage) {
         Session session = sessionMap.get(userId);
         try {
-            logger.debug("向 {} - session {} 发送消息: {}", userId, session.getId(), webSocketMessage);
+            logger.debug("向 {} - session {} 发送消息: {}", userId, session.getId(), webSocketMessage); // NOSONAR
             return this.sendMessageBySession(session, JSON.toJSONString(webSocketMessage));
         } catch (Exception e) {
             logger.error("服务端发给用户 {} 发送消息异常: {}", userId, e.getMessage());

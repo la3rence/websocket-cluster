@@ -10,6 +10,7 @@ import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.jaxrs.JerseyDockerHttpClient;
 import com.google.common.collect.Lists;
 import me.lawrenceli.gateway.config.WebSocketProperties;
+import me.lawrenceli.utils.StringPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -52,13 +53,14 @@ public class DockerService {
     }
 
     public List<Container> ps(String containerNamePrefix) {
-        String containerName = containerNamePrefix.replaceAll("[\n\r\t]", "_");
+        String containerName = StringPattern.replacePatternBreaking(containerNamePrefix);
         logger.info("执行: docker ps|grep {}", containerName);
         ListContainersCmd listContainersCmd = dockerClient.listContainersCmd().withNameFilter(Lists.newArrayList(containerNamePrefix));
         return listContainersCmd.exec();
     }
 
     public CreateContainerResponse createContainer(String imageName) {
+        imageName = StringPattern.replacePatternBreaking(imageName);
         logger.info("执行: 创建 {} 的容器", imageName);
         try (CreateContainerCmd containerCmd = dockerClient.createContainerCmd(imageName)) {
             return containerCmd.withHostConfig(HostConfig.newHostConfig().withNetworkMode(webSocketProperties.getDocker().getNetwork()))
@@ -68,16 +70,19 @@ public class DockerService {
     }
 
     public void runContainer(String containerId) {
+        containerId = StringPattern.replacePatternBreaking(containerId);
         logger.info("执行: 启动容器 {}", containerId);
         dockerClient.startContainerCmd(containerId).exec();
     }
 
     public void stopContainer(String containerId) {
+        containerId = StringPattern.replacePatternBreaking(containerId);
         logger.info("执行: 关闭容器 {}", containerId);
         dockerClient.stopContainerCmd(containerId).exec();
     }
 
     public void removeContainer(String containerId) {
+        containerId = StringPattern.replacePatternBreaking(containerId);
         logger.info("执行: 删除容器 {}", containerId);
         dockerClient.removeContainerCmd(containerId).exec();
     }

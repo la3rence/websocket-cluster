@@ -29,8 +29,7 @@ public class WebSocketController {
 
     @GetMapping("/send")
     public ResponseEntity<Boolean> send(@RequestParam String userId, @RequestParam String message) {
-        final WebSocketMessage webSocketMessage = WebSocketMessage.toUserOrServerMessage(MessageType.FOR_USER, message, WebSocketEndpoint.sessionMap.size());
-        logger.info("向用户 {} 发送消息: {}", userId, webSocketMessage);
+        WebSocketMessage webSocketMessage = WebSocketMessage.toUserOrServerMessage(MessageType.FOR_USER, message, WebSocketEndpoint.sessionMap.size());
         return ResponseEntity.ok(webSocketEndpoint.sendMessageToUser(userId, webSocketMessage));
     }
 
