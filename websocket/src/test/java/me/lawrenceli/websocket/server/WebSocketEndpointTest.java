@@ -44,7 +44,7 @@ class WebSocketEndpointTest {
     @Test
     void testSendMessageBySession() throws IOException, DeploymentException {
         WsRemoteEndpointImplClient wsRemoteEndpointImplClient = mock(WsRemoteEndpointImplClient.class);
-        doNothing().when(wsRemoteEndpointImplClient).sendString((String) any());
+        doNothing().when(wsRemoteEndpointImplClient).sendString(any());
         doNothing().when(wsRemoteEndpointImplClient).setSendTimeout(anyLong());
         PojoEndpointServer localEndpoint = new PojoEndpointServer();
         WsWebSocketContainer wsWebSocketContainer = new WsWebSocketContainer();
@@ -59,7 +59,7 @@ class WebSocketEndpointTest {
                                 requestParameterMap, "Query String", userPrincipal, "42", negotiatedExtensions, "Sub Protocol",
                                 pathParameters, true, new ServerEndpointRegistration("Path", new PojoEndpointServer())),
                         "Not all who wander are lost"));
-        verify(wsRemoteEndpointImplClient).sendString((String) any());
+        verify(wsRemoteEndpointImplClient).sendString(any());
         verify(wsRemoteEndpointImplClient).setSendTimeout(anyLong());
     }
 
@@ -71,9 +71,7 @@ class WebSocketEndpointTest {
     @Test
     void testSendMessageBySession3() throws IOException, DeploymentException {
         WsRemoteEndpointImplClient wsRemoteEndpointImplClient = mock(WsRemoteEndpointImplClient.class);
-        // doNothing().when(wsRemoteEndpointImplClient).setEncoders((javax.websocket.EndpointConfig) any());
-        // doNothing().when(wsRemoteEndpointImplClient).setSession((WsSession) any());
-        doThrow(new IOException("foo")).when(wsRemoteEndpointImplClient).sendString((String) any());
+        doThrow(new IOException("foo")).when(wsRemoteEndpointImplClient).sendString(any());
         doNothing().when(wsRemoteEndpointImplClient).setSendTimeout(anyLong());
         PojoEndpointServer localEndpoint = new PojoEndpointServer();
         WsWebSocketContainer wsWebSocketContainer = new WsWebSocketContainer();
@@ -88,9 +86,7 @@ class WebSocketEndpointTest {
                                 requestParameterMap, "Query String", userPrincipal, "42", negotiatedExtensions, "Sub Protocol",
                                 pathParameters, true, new ServerEndpointRegistration("Path", new PojoEndpointServer())),
                         "Not all who wander are lost"));
-        // verify(wsRemoteEndpointImplClient).setEncoders((javax.websocket.EndpointConfig) any());
-        // verify(wsRemoteEndpointImplClient).setSession((WsSession) any());
-        verify(wsRemoteEndpointImplClient).sendString((String) any());
+        verify(wsRemoteEndpointImplClient).sendString(any());
         verify(wsRemoteEndpointImplClient).setSendTimeout(anyLong());
     }
 

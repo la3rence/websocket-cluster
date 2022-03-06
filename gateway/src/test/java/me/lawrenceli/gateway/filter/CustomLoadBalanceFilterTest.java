@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("deprecation")
 class CustomLoadBalanceFilterTest {
     @Test
     void testConstructor() {

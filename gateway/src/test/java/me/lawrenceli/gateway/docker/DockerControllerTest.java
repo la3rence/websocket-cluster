@@ -21,27 +21,27 @@ class DockerControllerTest {
     @Test
     void testPs() {
         DockerService dockerService = mock(DockerService.class);
-        when(dockerService.ps((String) any())).thenReturn(new ArrayList<>());
+        when(dockerService.ps(any())).thenReturn(new ArrayList<>());
         ResponseEntity<List<Container>> actualPsResult = (new DockerController(dockerService, new WebSocketProperties()))
                 .ps("Container Name");
         assertTrue(actualPsResult.hasBody());
         assertEquals(HttpStatus.OK, actualPsResult.getStatusCode());
         assertTrue(actualPsResult.getHeaders().isEmpty());
-        verify(dockerService).ps((String) any());
+        verify(dockerService).ps(any());
     }
 
     @Test
     void testStopAndRemove() {
         DockerService dockerService = mock(DockerService.class);
-        doNothing().when(dockerService).removeContainer((String) any());
-        doNothing().when(dockerService).stopContainer((String) any());
+        doNothing().when(dockerService).removeContainer(any());
+        doNothing().when(dockerService).stopContainer(any());
         ResponseEntity<String> actualStopAndRemoveResult = (new DockerController(dockerService, new WebSocketProperties()))
                 .stopAndRemove("42");
         assertEquals("42", actualStopAndRemoveResult.getBody());
         assertEquals(HttpStatus.OK, actualStopAndRemoveResult.getStatusCode());
         assertTrue(actualStopAndRemoveResult.getHeaders().isEmpty());
-        verify(dockerService).removeContainer((String) any());
-        verify(dockerService).stopContainer((String) any());
+        verify(dockerService).removeContainer(any());
+        verify(dockerService).stopContainer(any());
     }
 }
 

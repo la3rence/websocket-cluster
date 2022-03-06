@@ -26,11 +26,11 @@ class ServerUpEventHandlerTest {
 
     @Test
     void testOnApplicationEvent() {
-        doNothing().when(this.stringRedisTemplate).convertAndSend((String) any(), (Object) any());
+        doNothing().when(this.stringRedisTemplate).convertAndSend(any(), any());
         SpringApplication application = new SpringApplication(Object.class);
         this.serverUpEventHandler.onApplicationEvent(new ApplicationReadyEvent(application, new String[]{"Args"},
                 new AnnotationConfigReactiveWebApplicationContext()));
-        verify(this.stringRedisTemplate).convertAndSend((String) any(), (Object) any());
+        verify(this.stringRedisTemplate).convertAndSend(any(), any());
     }
 }
 
