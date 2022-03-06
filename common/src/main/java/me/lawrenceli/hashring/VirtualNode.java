@@ -13,7 +13,7 @@ public class VirtualNode<T extends Node> implements Node, Serializable {
     private static final long serialVersionUID = -1066173071509622053L;
 
     // 真实节点
-    final T physicalNode;
+    final T physicalNode; // NOSONAR
 
     // 虚拟节点作为真实节点的副本，给它加个 -index 区分
     final Integer replicaIndex;
