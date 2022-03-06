@@ -35,5 +35,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn -v
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Lonor_websocket-cluster
-          bash <(curl -s https://codecov.io/bash)
+          if [ "${SONAR_TOKEN}" != "" ]; then
+            mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Lonor_websocket-cluster
+            bash <(curl -s https://codecov.io/bash)
+          else
+            mvn -B verify
+          fi
