@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +30,7 @@ class DiscoveryControllerTest {
         //   See https://diff.blue/R005 to resolve this issue.
 
         NacosNamingService nacosNamingService = mock(NacosNamingService.class);
-        when(nacosNamingService.getAllInstances((String) any())).thenReturn(new ArrayList<>());
+        when(nacosNamingService.getAllInstances(any())).thenReturn(new ArrayList<>());
 
         WebSocketProperties.Service service = new WebSocketProperties.Service();
         service.setName("42");
@@ -41,7 +42,7 @@ class DiscoveryControllerTest {
         assertTrue(actualServerStatus.hasBody());
         assertEquals(HttpStatus.OK, actualServerStatus.getStatusCode());
         assertTrue(actualServerStatus.getHeaders().isEmpty());
-        verify(nacosNamingService).getAllInstances((String) any());
+        verify(nacosNamingService).getAllInstances(any());
     }
 
     @Test
@@ -58,11 +59,11 @@ class DiscoveryControllerTest {
         webSocketProperties.setService(service);
         ResponseEntity<Map<String, Boolean>> actualServerStatus = (new DiscoveryController(nacosNamingService,
                 webSocketProperties)).getServerStatus();
-        assertEquals(1, actualServerStatus.getBody().size());
+        assertEquals(1, Objects.requireNonNull(actualServerStatus.getBody()).size());
         assertTrue(actualServerStatus.hasBody());
         assertEquals(HttpStatus.OK, actualServerStatus.getStatusCode());
         assertTrue(actualServerStatus.getHeaders().isEmpty());
-        verify(nacosNamingService).getAllInstances((String) any());
+        verify(nacosNamingService).getAllInstances(any());
     }
 
     @Test
@@ -75,7 +76,7 @@ class DiscoveryControllerTest {
         ArrayList<Instance> instanceList = new ArrayList<>();
         instanceList.add(instance);
         NacosNamingService nacosNamingService = mock(NacosNamingService.class);
-        when(nacosNamingService.getAllInstances((String) any())).thenReturn(instanceList);
+        when(nacosNamingService.getAllInstances(any())).thenReturn(instanceList);
 
         WebSocketProperties.Service service = new WebSocketProperties.Service();
         service.setName("42");
@@ -84,11 +85,11 @@ class DiscoveryControllerTest {
         webSocketProperties.setService(service);
         ResponseEntity<Map<String, Boolean>> actualServerStatus = (new DiscoveryController(nacosNamingService,
                 webSocketProperties)).getServerStatus();
-        assertEquals(1, actualServerStatus.getBody().size());
+        assertEquals(1, Objects.requireNonNull(actualServerStatus.getBody()).size());
         assertTrue(actualServerStatus.hasBody());
         assertEquals(HttpStatus.OK, actualServerStatus.getStatusCode());
         assertTrue(actualServerStatus.getHeaders().isEmpty());
-        verify(nacosNamingService).getAllInstances((String) any());
+        verify(nacosNamingService).getAllInstances(any());
         verify(instance).isEnabled();
         verify(instance).isHealthy();
         verify(instance).getIp();
@@ -104,7 +105,7 @@ class DiscoveryControllerTest {
         ArrayList<Instance> instanceList = new ArrayList<>();
         instanceList.add(instance);
         NacosNamingService nacosNamingService = mock(NacosNamingService.class);
-        when(nacosNamingService.getAllInstances((String) any())).thenReturn(instanceList);
+        when(nacosNamingService.getAllInstances(any())).thenReturn(instanceList);
 
         WebSocketProperties.Service service = new WebSocketProperties.Service();
         service.setName("42");
@@ -113,11 +114,11 @@ class DiscoveryControllerTest {
         webSocketProperties.setService(service);
         ResponseEntity<Map<String, Boolean>> actualServerStatus = (new DiscoveryController(nacosNamingService,
                 webSocketProperties)).getServerStatus();
-        assertEquals(1, actualServerStatus.getBody().size());
+        assertEquals(1, Objects.requireNonNull(actualServerStatus.getBody()).size());
         assertTrue(actualServerStatus.hasBody());
         assertEquals(HttpStatus.OK, actualServerStatus.getStatusCode());
         assertTrue(actualServerStatus.getHeaders().isEmpty());
-        verify(nacosNamingService).getAllInstances((String) any());
+        verify(nacosNamingService).getAllInstances(any());
         verify(instance).isEnabled();
         verify(instance).getIp();
     }

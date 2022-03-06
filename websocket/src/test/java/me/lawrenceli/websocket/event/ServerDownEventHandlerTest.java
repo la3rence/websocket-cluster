@@ -25,10 +25,10 @@ class ServerDownEventHandlerTest {
 
     @Test
     void testOnApplicationEvent() {
-        doNothing().when(this.stringRedisTemplate).convertAndSend((String) any(), (Object) any());
+        doNothing().when(this.stringRedisTemplate).convertAndSend(any(), any());
         this.serverDownEventHandler
                 .onApplicationEvent(new ContextClosedEvent(new AnnotationConfigReactiveWebApplicationContext()));
-        verify(this.stringRedisTemplate).convertAndSend((String) any(), (Object) any());
+        verify(this.stringRedisTemplate).convertAndSend(any(), any());
     }
 }
 

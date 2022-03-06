@@ -50,7 +50,7 @@ class WebSocketControllerTest {
 
     @Test
     void testSend() throws Exception {
-        when(this.webSocketEndpoint.sendMessageToUser((String) any(), (me.lawrenceli.model.WebSocketMessage) any()))
+        when(this.webSocketEndpoint.sendMessageToUser(any(), any()))
                 .thenReturn(true);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/send")
                 .param("message", "foo")
