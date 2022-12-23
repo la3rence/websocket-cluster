@@ -16,7 +16,7 @@
 
     <properties>
         <spring-cloud.version>Hoxton.SR10</spring-cloud.version>
-        <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
+        <spring-boot.version>3.0.1</spring-boot.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <sonar.organization>lonor</sonar.organization>
